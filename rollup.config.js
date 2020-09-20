@@ -8,12 +8,21 @@ import {
 } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
-import autoPreprocess from "svelte-preprocess";
+import sveltePreprocess from "svelte-preprocess";
 import typescript from "rollup-plugin-typescript2";
 
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
+
+const preprocess = sveltePreprocess({
+	scss: {
+		includePaths: ['src'],
+	},
+	postcss: {
+		plugins: [require('autoprefixer')],
+	},
+});
 
 const onwarn = (warning, onwarn) =>
 	(warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
@@ -33,7 +42,7 @@ export default {
 				dev,
 				hydratable: true,
 				emitCss: true,
-				preprocess: autoPreprocess(),
+				preprocess: preprocess,
 			}),
 			resolve({
 				browser: true,
@@ -80,7 +89,7 @@ export default {
 				generate: 'ssr',
 				hydratable: true,
 				dev,
-				preprocess: autoPreprocess(),
+				preprocess: preprocess,
 			}),
 			resolve({
 				dedupe: ['svelte']
