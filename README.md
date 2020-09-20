@@ -1,1 +1,1 @@
-Sapper / Svelte + TypeScript + Prettier
+Sapper / Svelte + TypeScript + SCSS + Prettier
